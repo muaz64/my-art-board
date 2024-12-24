@@ -1,35 +1,95 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useRef, useEffect, useState } from "react"
+import "./App.css"
 
-function App() {
-  const [count, setCount] = useState(0)
+const App = () => {
+  const canvasRef =useRef(null);
+  const [isDrawing, SetIsDrawing] =useState(false);
+  const [isErasing, setIsErasing] =useState(false);
+  const [eraserSize] = useState(50);
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+  useEffect(() =>{
+    const canvas =canvasRef.current;
+    const ctx =canvas .getContext('2d');
+
+    canvas.width = window.innerWidth;
+    canvas.height =window.innerHeight -50;
+
+    ctx.fillStyle ='white';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    const handleResize = () =>{
+      const imgData =ctx.getImageData(0, 0, canvas.width, canvas.height);
+      canvas.width = window.innerWidth;
+      canvas.height =window.innerHeight -50;
+      ctx.fillStyle ='white';
+      ctx.putImageData(imgData, 0, 0);
+    };
+    window.addEventListener('resize', handleResize);
+    return() => {
+      window.removeEventListener('resize', handleResize);
+    };
+
+  }, []);
+
+  const startDrawing  = (e) => {
+    SetIsDrawing(true);
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    ctx.beginPath();
+    ctx.moveTo(e.nativeEvent.offsetX, e.nativeEvent.offsetY);
+   
+
+  };
+   const draw =(e) =>{
+    if (!isDrawing) return;
+
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+
+    if (isErasing) {
+      ctx.linewidth = eraserSize;
+      ctx.strokeStyle ='white';
+      ctx.lineTo(e.nativeEvent.offsetX, e.nativeEvent.offsetY);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(e.nativeEvent.offsetX, e.nativeEvent.offsetY)
+      
+    } else {
+      ctx.lineWidth = 2;
+      ctx.strokeStyle ='black';
+      ctx.lineTo(e.nativeEvent.offsetX, e.nativeEvent.offsetY);
+      ctx.stroke();
+    }
+
+   };
+  
+   const stopDrawing = () => {
+    SetIsDrawing(false);
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    ctx.closePath();
+    
+   };
+
+ return (
+    <div className="App">
+      <div className="toolbar bg-white p-2 shadow-md flex">
+        <button onClick={() => setIsErasing(false)}
+        className={`tool mr-2 p-2 rounded ${!isErasing ? 'bg-blue-500 text-white': 'bg-white'}`}
+        >Pen</button>
+        <button onClick={() => setIsErasing(true)}
+         className={`tool p-2 rounded ${isErasing ? 'bg-blue-500 text-white': 'bg-white'}`}
+        >Erase</button>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+      <canvas ref={canvasRef}
+      className="cursor-crosshair"
+      onMouseDown={startDrawing}
+      onMouseMove={draw}
+      onMouseUp={stopDrawing}
+      onMouseLeave={stopDrawing}
+      ></canvas>
+    </div>
+  );
 }
 
-export default App
+export default App;
