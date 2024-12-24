@@ -1,42 +1,58 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+/* Reset default margins and padding */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+/* Body background and font */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0; /* Light gray background */
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Main container */
+.App {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+/* Toolbar for buttons */
+.toolbar {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  gap: 4px;
+}
+/* 
+button {
+  padding: 10px 15px;
+  cursor: pointer;
+  font-size: 16px;
+  background: white;
+  color: black;
+  border: 1px solid black;
+  border-radius: 4px;
+  /* transition: background-color 0.3s, color 0.3s, border-color 0.3s; 
 }
 
-.card {
-  padding: 2em;
+button:hover {
+  background-color: #f0f0f0;
+  color: black;
 }
 
-.read-the-docs {
-  color: #888;
+button:focus {
+  outline: none;
 }
+
+/* Canvas
+canvas {
+  border: 1px solid #ccc;
+  display: block;
+  margin: auto;
+  background-color: #fff;
+} 
+*/
